@@ -51,26 +51,13 @@ function Toast({ message, type }: { message: string; type: 'success' | 'info' | 
 
 // ─── Landing Page ────────────────────────────────────────────────────────────
 function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
-  const [activeTab, setActiveTab] = useState<'guest' | 'login' | 'register'>('guest');
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [joinId, setJoinId] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
-  const handleGuestLogin = async () => {
-    setLoading(true);
-    setError('');
-    setSuccess('');
-    const { error: authError } = await supabase.auth.signInAnonymously();
-    if (authError) {
-      setError(authError.message === 'Anonymous sign-ins are not enabled'
-        ? 'O Login Anônimo não está ativo no Supabase. Use a aba "Entrar" com E-mail.'
-        : authError.message);
-      setLoading(false);
-    }
-  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -153,12 +140,6 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
         {/* Auth Tabs */}
         <div className="landing-tabs">
           <button
-            className={`landing-tab-btn ${activeTab === 'guest' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('guest'); setError(''); setSuccess(''); }}
-          >
-            Visitante
-          </button>
-          <button
             className={`landing-tab-btn ${activeTab === 'login' ? 'active' : ''}`}
             onClick={() => { setActiveTab('login'); setError(''); setSuccess(''); }}
           >
@@ -173,21 +154,6 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
         </div>
 
         <div className="landing-tab-content">
-          {activeTab === 'guest' && (
-            <div className="auth-form-container">
-              <p className="auth-info-text">
-                Crie seus palpites de forma rápida. Seus dados serão salvos de forma anônima e vinculados ao seu navegador.
-              </p>
-              <button
-                className="btn btn-accent"
-                style={{ width: '100%', justifyContent: 'center', padding: '12px 24px', fontSize: '0.9375rem' }}
-                onClick={handleGuestLogin}
-                disabled={loading}
-              >
-                {loading ? <span className="spinner" /> : 'Entrar como Visitante ⚡'}
-              </button>
-            </div>
-          )}
 
           {activeTab === 'login' && (
             <form onSubmit={handleLogin} className="auth-form">
