@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useTheme } from '@/lib/theme';
+import { useRouter } from 'next/navigation';
 
 interface AdminUser {
   id: string;
@@ -31,6 +32,7 @@ function ThemeToggle() {
 }
 
 export default function AdminDashboard() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isAuth, setIsAuth] = useState(false);

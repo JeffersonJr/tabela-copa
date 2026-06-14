@@ -382,6 +382,7 @@ export default function Home() {
     setOwnerId,
     setSessionId,
     loadState,
+    resetTournament,
   } = useTournamentStore();
 
   if (!isSupabaseConfigured) {
@@ -426,6 +427,7 @@ export default function Home() {
   const [isSaving, setIsSaving] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
   
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -712,6 +714,20 @@ export default function Home() {
               <span className="session-id">{sessionId}</span>
             </div>
           )}
+          {/* Reset button */}
+          {!isReadOnly && (
+            <button
+              className="btn btn-ghost btn-sm"
+              onClick={() => setShowResetConfirm(true)}
+              title="Limpar Palpites"
+              style={{ color: 'var(--red)', borderColor: 'transparent' }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              Limpar Palpites
+            </button>
+          )}
 
           {/* Share button */}
           {sessionId && (
@@ -817,6 +833,34 @@ export default function Home() {
 
       {/* Toast */}
       {toast && <Toast message={toast.message} type={toast.type} />}
+
+      {/* Reset Confirm Modal */}
+      {showResetConfirm && (
+        <div className="modal-overlay animate-fadeIn" onClick={() => setShowResetConfirm(false)}>
+          <div className="modal-content animate-slideUp" onClick={e => e.stopPropagation()} style={{ maxWidth: 400, textAlign: 'center' }}>
+            <h2 className="modal-title" style={{ color: 'var(--red)' }}>Limpar Todos os Palpites?</h2>
+            <p style={{ margin: '16px 0 24px', color: 'var(--text-secondary)', fontSize: '0.9375rem', lineHeight: 1.5 }}>
+              Isso apagará permanentemente todos os resultados que você preencheu. Essa ação não pode ser desfeita.
+            </p>
+            <div style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+              <button className="btn btn-ghost" onClick={() => setShowResetConfirm(false)} style={{ flex: 1 }}>
+                Cancelar
+              </button>
+              <button 
+                className="btn btn-primary" 
+                style={{ flex: 1, background: 'var(--red)', color: '#fff' }}
+                onClick={() => {
+                  resetTournament();
+                  setShowResetConfirm(false);
+                  showToast('Palpites limpos com sucesso.', 'info');
+                }}
+              >
+                Limpar Tudo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="app-footer">
