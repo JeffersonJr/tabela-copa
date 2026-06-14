@@ -89,9 +89,19 @@ export default function GroupCard({ groupId, groupState }: GroupCardProps) {
                     <div
                       key={match.id}
                       className="match-row"
-                      style={{ cursor: 'pointer' }}
+                      style={{ cursor: 'pointer', display: 'flex', flexDirection: 'column' }}
                       onClick={() => setOpenMatchId(match.id)}
                     >
+                      {/* Date/Time/Location Header */}
+                      {(match.date || match.location) && (
+                        <div style={{ textAlign: 'center', fontSize: '0.65rem', color: 'var(--text-secondary)', marginBottom: 6, display: 'flex', justifyContent: 'center', gap: 6, fontWeight: 500 }}>
+                          {match.date && <span>{match.date}</span>}
+                          {match.time && match.time !== 'TBD' && <span>{match.time}</span>}
+                          {(match.date || match.time) && match.location && <span>•</span>}
+                          {match.location && <span>{match.location}</span>}
+                        </div>
+                      )}
+                      
                       <div className="match-teams">
                         {/* Home Team */}
                         <div className="match-team">

@@ -1,5 +1,6 @@
 import { Match, GroupStanding, GroupState, MatchScore, KnockoutMatch, TournamentState } from './types';
 import GROUPS from '../data/teams';
+import { GROUP_MATCHES_SCHEDULE } from './schedule';
 
 // ────────────────────────────────────────────────────────────────────────────
 // Score Helpers
@@ -88,26 +89,42 @@ export function calculateGroupStandings(teamIds: string[], matches: Match[]): Gr
   });
 }
 
-// Generate all 6 matches for a group (round robin)
+// Generate all 6 matches for a group using the predefined schedule
 export function generateGroupMatches(groupId: string, teamIds: string[]): Match[] {
   const matches: Match[] = [];
-  let idx = 0;
-  const matchdays = [[0, 3], [1, 2], [0, 1], [2, 3], [0, 2], [1, 3]];
+  const schedule = GROUP_MATCHES_SCHEDULE[groupId];
+  
+  if (!schedule) {
+    // Fallback if no schedule is found
+    let idx = 0;
+    const matchdays = [[0, 3], [1, 2], [0, 1], [2, 3], [0, 2], [1, 3]];
+    for (const [a, b] of matchdays) {
+      matches.push({
+        id: `${groupId}-${idx++}`,
+        groupId,
+        matchday: Math.floor(idx / 2),
+        homeTeamId: teamIds[a],
+        awayTeamId: teamIds[b],
+        played: false,
+        score: { home: { first: null, second: null }, away: { first: null, second: null }, hasExtraTime: false, hasPenalties: false },
+      });
+    }
+    return matches;
+  }
 
-  for (const [a, b] of matchdays) {
+  let idx = 0;
+  for (const sm of schedule) {
     matches.push({
       id: `${groupId}-${idx++}`,
       groupId,
       matchday: Math.floor(idx / 2),
-      homeTeamId: teamIds[a],
-      awayTeamId: teamIds[b],
+      homeTeamId: sm.home,
+      awayTeamId: sm.away,
+      date: sm.date,
+      time: sm.time,
+      location: sm.location,
       played: false,
-      score: {
-        home: { first: null, second: null },
-        away: { first: null, second: null },
-        hasExtraTime: false,
-        hasPenalties: false,
-      },
+      score: { home: { first: null, second: null }, away: { first: null, second: null }, hasExtraTime: false, hasPenalties: false },
     });
   }
   return matches;

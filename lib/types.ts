@@ -26,6 +26,9 @@ export interface Match {
   // For group stage matches
   groupId?: string;
   matchday?: number;
+  date?: string;
+  time?: string;
+  location?: string;
 }
 
 export interface GroupStanding {
