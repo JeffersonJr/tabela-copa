@@ -59,6 +59,10 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  
+  // 2FA login state
+  const [mfaChallenge, setMfaChallenge] = useState<{ factorId: string, id: string } | null>(null);
+  const [mfaCode, setMfaCode] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +70,27 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
     setLoading(true);
     setError('');
     setSuccess('');
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    
+    // Check if we are verifying MFA
+    if (mfaChallenge) {
+      const verify = await supabase.auth.mfa.verify({
+        factorId: mfaChallenge.factorId,
+        challengeId: mfaChallenge.id,
+        code: mfaCode.trim()
+      });
+      if (verify.error) {
+        setError(verify.error.message);
+        setLoading(false);
+      } else {
+        // Success
+        setMfaChallenge(null);
+        setMfaCode('');
+        showSuccessMessage();
+      }
+      return;
+    }
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
       email: email.trim(),
       password: password.trim(),
     });
@@ -77,7 +101,45 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
         setError(authError.message);
       }
       setLoading(false);
+    } else {
+      // Check if AAL2 (2FA) is required
+      const { data: factorsData } = await supabase.auth.mfa.listFactors();
+      const totpFactor = factorsData?.totp?.find((f: any) => f.status === 'verified');
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      if (totpFactor && session?.user?.app_metadata?.aal === 'aal1') {
+        // Need to challenge
+        const challenge = await supabase.auth.mfa.challenge({ factorId: totpFactor.id });
+        if (challenge.error) {
+          setError('Erro ao iniciar 2FA. Tente novamente.');
+          setLoading(false);
+        } else {
+          setMfaChallenge({ factorId: totpFactor.id, id: challenge.data.id });
+          setLoading(false);
+        }
+      } else {
+        showSuccessMessage();
+      }
     }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email.trim()) {
+      setError('Por favor, preencha o campo de e-mail acima para recuperar sua senha.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setSuccess('');
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/profile`,
+    });
+    if (error) {
+      setError(error.message);
+    } else {
+      setSuccess('Se o e-mail existir, um link de recuperação foi enviado.');
+    }
+    setLoading(false);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -150,13 +212,13 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
         <div className="landing-tabs">
           <button
             className={`landing-tab-btn ${activeTab === 'login' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('login'); setError(''); setSuccess(''); }}
+            onClick={() => { setActiveTab('login'); setError(''); setSuccess(''); setMfaChallenge(null); }}
           >
             Entrar
           </button>
           <button
             className={`landing-tab-btn ${activeTab === 'register' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('register'); setError(''); setSuccess(''); }}
+            onClick={() => { setActiveTab('register'); setError(''); setSuccess(''); setMfaChallenge(null); }}
           >
             Cadastrar
           </button>
@@ -164,7 +226,7 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
 
         <div className="landing-tab-content">
 
-          {activeTab === 'login' && (
+          {activeTab === 'login' && !mfaChallenge && (
             <form onSubmit={handleLogin} className="auth-form">
               <input
                 className="landing-input text-field"
@@ -174,14 +236,24 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
                 onChange={e => setEmail(e.target.value)}
                 required
               />
-              <input
-                className="landing-input text-field"
-                type="password"
-                placeholder="Senha"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                required
-              />
+              <div style={{ position: 'relative', width: '100%' }}>
+                <input
+                  className="landing-input text-field"
+                  style={{ width: '100%' }}
+                  type="password"
+                  placeholder="Senha"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div style={{ width: '100%', textAlign: 'right', marginTop: -6 }}>
+                <button type="button" className="btn btn-ghost btn-xs" onClick={handleResetPassword} disabled={loading} style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  Esqueceu a senha?
+                </button>
+              </div>
+
               <button
                 className="btn btn-accent"
                 style={{ width: '100%', justifyContent: 'center', padding: '12px 24px' }}
@@ -189,6 +261,41 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
                 disabled={loading}
               >
                 {loading ? <span className="spinner" /> : 'Entrar'}
+              </button>
+            </form>
+          )}
+
+          {activeTab === 'login' && mfaChallenge && (
+            <form onSubmit={handleLogin} className="auth-form" style={{ gap: 16 }}>
+              <p style={{ fontSize: '0.875rem', textAlign: 'center' }}>
+                Proteção por 2FA ativada.<br/>Digite o código gerado no seu aplicativo autenticador.
+              </p>
+              <input
+                className="landing-input text-field"
+                type="text"
+                placeholder="000000"
+                value={mfaCode}
+                onChange={e => setMfaCode(e.target.value)}
+                maxLength={6}
+                required
+                style={{ textAlign: 'center', fontSize: '1.25rem', letterSpacing: '0.25em' }}
+              />
+              <button
+                className="btn btn-accent"
+                style={{ width: '100%', justifyContent: 'center', padding: '12px 24px' }}
+                type="submit"
+                disabled={loading || mfaCode.length < 6}
+              >
+                {loading ? <span className="spinner" /> : 'Verificar 2FA e Entrar'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost"
+                style={{ width: '100%', justifyContent: 'center' }}
+                onClick={() => setMfaChallenge(null)}
+                disabled={loading}
+              >
+                Voltar
               </button>
             </form>
           )}
@@ -260,6 +367,8 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
 
 // ─── Main App ────────────────────────────────────────────────────────────────
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  
   const {
     tournament,
     sessionId,
@@ -405,6 +514,11 @@ export default function Home() {
   useEffect(() => {
     if (!isSupabaseConfigured) return;
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        window.location.href = '/profile';
+        return;
+      }
+      
       const u = session?.user || null;
       setUser(u ? { id: u.id, email: u.email, is_anonymous: u.is_anonymous } : null);
 
@@ -581,12 +695,12 @@ export default function Home() {
 
           {/* User badge */}
           {user && (
-            <div className="user-badge" title={user.email ? `Logado como ${user.email}` : 'Logado como Visitante'}>
+            <a href="/profile" className="user-badge" title={user.email ? `Meu Perfil (${user.email})` : 'Meu Perfil'} style={{ textDecoration: 'none' }}>
               <span className="user-badge-icon">{user.is_anonymous ? '👤' : '✉️'}</span>
               <span className="user-badge-name">
                 {user.is_anonymous ? 'Visitante' : user.email?.split('@')[0]}
               </span>
-            </div>
+            </a>
           )}
 
           {/* Session indicator */}
