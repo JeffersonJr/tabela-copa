@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
     const { email, password } = body || {};
 
-    if (email !== 'contato@evolves.site' || password !== '256398Dash@2026') {
+    if (email !== 'contato@evolves.site' || password !== '256398Tabela@2026') {
       return NextResponse.json({ error: 'Credenciais inválidas' }, { status: 401 });
     }
 
