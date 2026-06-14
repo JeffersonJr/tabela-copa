@@ -123,8 +123,16 @@ export default function ProfilePage() {
   const startMfaEnrollment = async () => {
     setLoading(true);
     try {
+      // Se já houver um fator pendente/não verificado (por ex: o usuário recarregou a página antes de confirmar), 
+      // precisamos deletá-lo antes de gerar um novo, caso contrário a API do Supabase retorna erro.
+      const unverifiedFactors = mfaFactors.filter(f => f.status === 'unverified');
+      for (const factor of unverifiedFactors) {
+        await supabase.auth.mfa.unenroll({ factorId: factor.id });
+      }
+
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
+        friendlyName: 'Evolves Authenticator'
       });
       if (error) throw error;
       setFactorId(data.id);
