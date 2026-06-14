@@ -1325,7 +1325,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Header brand logo */
 .header-brand {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-md);
 }
 
