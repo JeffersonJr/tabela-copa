@@ -1190,7 +1190,19 @@ h1, h2, h3, h4, h5, h6 {
   .page-wrapper { padding: var(--space-md); }
   .header { padding: var(--space-md) 0; flex-direction: column; align-items: stretch; gap: var(--space-md); }
   .header-brand { align-items: center; text-align: center; }
-  .header-actions { width: 100%; justify-content: center; }
+  .header-actions { 
+    width: 100%; 
+    justify-content: center; 
+    gap: 8px; 
+  }
+  .header-actions > * {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+  }
+  .session-bar {
+    flex: 1 1 100%; /* Force to span a full line if needed, or wrap naturally */
+  }
   .header-title { font-size: 1.5rem; }
   .tabs { width: 100%; }
   .tab { flex: 1; text-align: center; padding: 8px 12px; font-size: 0.8125rem; }
