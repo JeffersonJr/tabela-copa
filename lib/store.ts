@@ -272,7 +272,7 @@ export const useTournamentStore = create<TournamentStore>((set, get) => ({
       knockout = propagateKnockout(knockout);
 
       return {
-        tournament: { groups, knockout },
+        tournament: { ...state.tournament, groups, knockout },
         isDirty: true,
       };
     });
