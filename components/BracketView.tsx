@@ -83,6 +83,67 @@ function BracketMatchCard({ match, onOpen }: BracketMatchCardProps) {
   );
 }
 
+function Podium({ tournament }: { tournament: any }) {
+  const thirdM = Object.values(tournament.knockout).find((m: any) => m.round === 'third') as KnockoutMatch | undefined;
+  const finalM = Object.values(tournament.knockout).find((m: any) => m.round === 'final') as KnockoutMatch | undefined;
+
+  let firstId = null;
+  let secondId = null;
+  let thirdId = null;
+
+  if (finalM && finalM.played) {
+    firstId = getWinner(finalM);
+    secondId = firstId === finalM.homeTeamId ? finalM.awayTeamId : finalM.homeTeamId;
+  }
+  
+  if (thirdM && thirdM.played) {
+    thirdId = getWinner(thirdM);
+  }
+
+  const renderStep = (teamId: string | null, height: number, color: string, icon: string) => {
+    const team = teamId ? TEAMS_MAP[teamId] : null;
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '30%', justifyContent: 'flex-end' }}>
+        {team ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 8 }}>
+            <TeamFlag flagCode={team.flag} teamName={team.name} size="md" />
+            <span style={{ fontSize: '0.875rem', fontWeight: 'bold', marginTop: 4, textAlign: 'center' }}>{team.shortName}</span>
+          </div>
+        ) : (
+          <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--border)', marginBottom: 8, opacity: 0.5 }} />
+        )}
+        <div style={{ 
+          width: '100%', 
+          height, 
+          background: color, 
+          borderRadius: '8px 8px 0 0',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          paddingTop: 8,
+          fontSize: '1.5rem',
+          color: '#fff',
+          fontWeight: 'bold',
+          boxShadow: 'inset 0 0 10px rgba(0,0,0,0.2)'
+        }}>
+          {icon}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{ marginTop: 32, padding: 24, background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)' }}>
+      <h3 style={{ textAlign: 'center', marginBottom: 32, fontSize: '1.25rem', fontWeight: 800 }}>Pódio</h3>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-end', gap: 8, height: 160 }}>
+        {renderStep(secondId, 100, '#C0C0C0', '🥈')}
+        {renderStep(firstId, 140, '#FFD700', '🏆')}
+        {renderStep(thirdId, 70, '#CD7F32', '🥉')}
+      </div>
+    </div>
+  );
+}
+
 export default function BracketView() {
   const { tournament, updateKnockoutMatch } = useTournamentStore();
   const [openMatchNum, setOpenMatchNum] = useState<number | null>(null);
@@ -130,13 +191,29 @@ export default function BracketView() {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-        {displayMatches.map(match => (
-          <div key={match.matchNumber} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-            <BracketMatchCard match={match} onOpen={setOpenMatchNum} />
+      {activeTab === 'finais' ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+            {displayMatches.map(match => (
+              <div key={match.matchNumber} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <h3 style={{ marginBottom: 12, fontSize: '1rem', color: match.round === 'final' ? '#FFD700' : '#CD7F32', fontWeight: 'bold' }}>
+                  {match.round === 'final' ? '🏆 Grande Final' : '🥉 Disputa do 3º Lugar'}
+                </h3>
+                <BracketMatchCard match={match} onOpen={setOpenMatchNum} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+          <Podium tournament={tournament} />
+        </div>
+      ) : (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+          {displayMatches.map(match => (
+            <div key={match.matchNumber} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              <BracketMatchCard match={match} onOpen={setOpenMatchNum} />
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Score Modal */}
       {openMatch && (
