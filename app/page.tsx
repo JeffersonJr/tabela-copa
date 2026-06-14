@@ -695,11 +695,9 @@ export default function Home() {
 
           {/* User badge */}
           {user && (
-            <a href="/profile" className="user-badge" title={user.email ? `Meu Perfil (${user.email})` : 'Meu Perfil'} style={{ textDecoration: 'none' }}>
-              <span className="user-badge-icon">{user.is_anonymous ? '👤' : '✉️'}</span>
-              <span className="user-badge-name">
-                {user.is_anonymous ? 'Visitante' : user.email?.split('@')[0]}
-              </span>
+            <a className="user-badge" href="/profile" title="Meu Perfil">
+              <span className="user-badge-icon">👤</span>
+              <span className="user-badge-name">Perfil</span>
             </a>
           )}
 

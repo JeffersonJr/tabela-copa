@@ -14,6 +14,7 @@ export interface MatchScore {
   penalties?: { home: number; away: number } | null;
   hasExtraTime: boolean;
   hasPenalties: boolean;
+  isDefinitive?: boolean;
 }
 
 export interface Match {

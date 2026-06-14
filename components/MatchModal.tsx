@@ -47,6 +47,7 @@ function ScoreInput({
 export default function MatchModal({ match, roundLabel, onUpdate, onClose }: MatchModalProps) {
   const [score, setScore] = useState<MatchScore>({ ...match.score });
   const knockoutMatch = match as KnockoutMatch;
+  const isKnockout = 'round' in match;
 
   const homeTeam = match.homeTeamId ? TEAMS_MAP[match.homeTeamId] : null;
   const awayTeam = match.awayTeamId ? TEAMS_MAP[match.awayTeamId] : null;
@@ -125,7 +126,7 @@ export default function MatchModal({ match, roundLabel, onUpdate, onClose }: Mat
           </div>
 
           {/* Extra Time */}
-          {score.hasExtraTime && (
+          {isKnockout && score.hasExtraTime && (
             <div className="score-row">
               <span className="score-row-label et">ET</span>
               <ScoreInput
@@ -145,7 +146,7 @@ export default function MatchModal({ match, roundLabel, onUpdate, onClose }: Mat
           )}
 
           {/* Penalties */}
-          {score.hasPenalties && (
+          {isKnockout && score.hasPenalties && (
             <div className="score-row">
               <span className="score-row-label pen">PEN</span>
               <ScoreInput
@@ -165,21 +166,45 @@ export default function MatchModal({ match, roundLabel, onUpdate, onClose }: Mat
           )}
         </div>
 
-        {/* Extra toggles */}
-        <div className="modal-toggles">
-          <button
-            className={`extra-toggle et ${score.hasExtraTime ? 'active' : ''}`}
-            onClick={() => update({ hasExtraTime: !score.hasExtraTime, extraTime: null })}
-          >
-            ⏱ Prorrogação
-          </button>
-          <button
-            className={`extra-toggle pen ${score.hasPenalties ? 'active' : ''}`}
-            onClick={() => update({ hasPenalties: !score.hasPenalties, penalties: null })}
-          >
-            🥅 Pênaltis
-          </button>
+        {/* Definitive Toggle */}
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
+          <div style={{ display: 'flex', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', padding: 4, border: '1px solid var(--border)' }}>
+            <button
+              className={`btn btn-sm ${!score.isDefinitive ? 'active' : ''}`}
+              style={{ background: !score.isDefinitive ? 'var(--accent)' : 'transparent', color: !score.isDefinitive ? '#fff' : 'var(--text-secondary)', border: 'none' }}
+              onClick={() => update({ isDefinitive: false })}
+            >
+              Meu Palpite
+            </button>
+            <button
+              className={`btn btn-sm ${score.isDefinitive ? 'active' : ''}`}
+              style={{ background: score.isDefinitive ? '#ff4444' : 'transparent', color: score.isDefinitive ? '#fff' : 'var(--text-secondary)', border: 'none' }}
+              onClick={() => update({ isDefinitive: true })}
+            >
+              Resultado Oficial
+            </button>
+          </div>
         </div>
+
+        {/* Extra toggles */}
+        {isKnockout && (
+          <div className="modal-toggles">
+            <button
+              className={`extra-toggle et ${score.hasExtraTime ? 'active' : ''}`}
+              onClick={() => update({ hasExtraTime: !score.hasExtraTime, extraTime: null })}
+            >
+              ⏱ Prorrogação
+            </button>
+            <button
+              className={`extra-toggle pen ${score.hasPenalties ? 'active' : ''}`}
+              onClick={() => update({ hasPenalties: !score.hasPenalties, penalties: null })}
+            >
+              🥅 Pênaltis
+            </button>
+          </div>
+        )}
+
+
 
         {/* Footer */}
         <div className="modal-footer">
