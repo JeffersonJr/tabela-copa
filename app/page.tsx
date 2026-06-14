@@ -6,7 +6,7 @@ import BracketView from '@/components/BracketView';
 import GROUPS from '@/data/teams';
 import { TournamentState } from '@/lib/types';
 import { useTheme } from '@/lib/theme';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
 import { createInitialTournamentState } from '@/lib/tournament';
 
 type Tab = 'grupos' | 'chaveamento';
@@ -265,6 +265,42 @@ export default function Home() {
     loadState,
   } = useTournamentStore();
 
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="landing animate-fadeIn">
+        <div className="landing-card" style={{ maxWidth: 460 }}>
+          <div className="landing-logo-container">
+            <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="landing-logo" style={{ height: 100 }} />
+          </div>
+          <h1 className="landing-title" style={{ fontSize: '1.5rem', marginBottom: 12 }}>Configuração Necessária ⚙️</h1>
+          <p className="landing-sub" style={{ marginBottom: 20 }}>
+            As credenciais do Supabase não foram encontradas no ambiente de execução.
+          </p>
+          <div className="auth-form-container" style={{ textAlign: 'left', background: 'var(--bg-input)', padding: '20px', borderRadius: '10px', border: '1px solid var(--border)' }}>
+            <p className="auth-info-text" style={{ textAlign: 'left', color: 'var(--text-primary)', fontSize: '0.8125rem', marginBottom: 12, lineHeight: 1.5, fontWeight: 500 }}>
+              Para rodar este projeto na <strong>Vercel</strong>, adicione as seguintes variáveis de ambiente nas configurações do seu projeto (**Settings &gt; Environment Variables**):
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontFamily: 'monospace', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              <div style={{ background: 'var(--bg-card)', padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)' }}>
+                <strong>NEXT_PUBLIC_SUPABASE_URL</strong>
+              </div>
+              <div style={{ background: 'var(--bg-card)', padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)' }}>
+                <strong>NEXT_PUBLIC_SUPABASE_ANON_KEY</strong>
+              </div>
+              <div style={{ background: 'var(--bg-card)', padding: '8px 12px', borderRadius: 6, border: '1px solid var(--border)' }}>
+                <strong>SUPABASE_SERVICE_ROLE_KEY</strong>
+              </div>
+            </div>
+          </div>
+          
+          <footer className="app-footer landing-footer" style={{ marginTop: 28 }}>
+            <span>Powered by <a href="https://evolves.site" target="_blank" rel="noopener noreferrer">Evolves Tecnologia</a> · <a href="mailto:contato@evolves.site">contato@evolves.site</a></span>
+          </footer>
+        </div>
+      </div>
+    );
+  }
+
   const [tab, setTab] = useState<Tab>('grupos');
   const [showLanding, setShowLanding] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -282,6 +318,7 @@ export default function Home() {
 
   // Fetch prediction by short ID
   const fetchPrediction = useCallback(async (id: string) => {
+    if (!isSupabaseConfigured) return null;
     try {
       const { data, error } = await supabase
         .from('predictions')
@@ -357,6 +394,7 @@ export default function Home() {
 
   // Set up auth state change listener
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       const u = session?.user || null;
       setUser(u ? { id: u.id, email: u.email, is_anonymous: u.is_anonymous } : null);
