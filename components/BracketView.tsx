@@ -74,9 +74,25 @@ function BracketMatchCard({ match, onOpen }: BracketMatchCardProps) {
         isWinner={match.played && winner === match.awayTeamId}
         isPlayed={match.played}
       />
-      {match.played && match.score.hasPenalties && match.score.penalties && (
-        <div style={{ padding: '3px 10px', fontSize: '0.6rem', color: 'var(--blue)', fontWeight: 600, borderTop: '1px solid var(--border-subtle)' }}>
-          ({match.score.penalties.home}–{match.score.penalties.away} pen)
+      {match.played && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '4px 0', borderTop: '1px solid var(--border-subtle)', gap: 4 }}>
+          {match.score.hasPenalties && match.score.penalties && (
+            <span style={{ fontSize: '0.6rem', color: 'var(--blue)', fontWeight: 600 }}>
+              ({match.score.penalties.home}–{match.score.penalties.away} pen)
+            </span>
+          )}
+          <span style={{ 
+            fontSize: '0.55rem', 
+            padding: '2px 6px', 
+            borderRadius: '4px', 
+            background: match.score.isDefinitive ? '#ff444420' : 'var(--accent-light)',
+            color: match.score.isDefinitive ? '#ff4444' : 'var(--accent)',
+            fontWeight: 600,
+            textTransform: 'uppercase',
+            lineHeight: 1
+          }}>
+            {match.score.isDefinitive ? 'Oficial' : 'Palpite'}
+          </span>
         </div>
       )}
     </div>

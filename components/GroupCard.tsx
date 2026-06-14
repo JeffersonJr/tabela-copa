@@ -134,18 +134,24 @@ export default function GroupCard({ groupId, groupState }: GroupCardProps) {
 
                       {/* Score detail */}
                       {isPlayed && (
-                        <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
-                          <span>{match.score.home.first ?? 0}–{match.score.away.first ?? 0} (1T)</span>
-                          <span>·</span>
-                          <span>{match.score.home.second ?? 0}–{match.score.away.second ?? 0} (2T)</span>
-                          {match.score.hasExtraTime && match.score.extraTime && (
-                            <>
-                              <span>·</span>
-                              <span style={{ color: 'var(--orange)' }}>
-                                {match.score.extraTime.home}–{match.score.extraTime.away} (ET)
-                              </span>
-                            </>
-                          )}
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
+                            <span>{match.score.home.first ?? 0}–{match.score.away.first ?? 0} (1T)</span>
+                            <span>·</span>
+                            <span>{match.score.home.second ?? 0}–{match.score.away.second ?? 0} (2T)</span>
+                          </div>
+                          <span style={{ 
+                            fontSize: '0.6rem', 
+                            padding: '2px 6px', 
+                            borderRadius: '4px', 
+                            background: match.score.isDefinitive ? '#ff444420' : 'var(--accent-light)',
+                            color: match.score.isDefinitive ? '#ff4444' : 'var(--accent)',
+                            fontWeight: 600,
+                            textTransform: 'uppercase',
+                            lineHeight: 1
+                          }}>
+                            {match.score.isDefinitive ? 'Oficial' : 'Palpite'}
+                          </span>
                         </div>
                       )}
                     </div>
