@@ -1494,3 +1494,11 @@ h1, h2, h3, h4, h5, h6 {
   border-color: #e1306c;
   color: #e1306c;
 }
+
+/* Admin Table Dashboard */
+.admin-table tbody tr {
+  transition: background-color var(--duration) var(--ease);
+}
+.admin-table tbody tr:hover {
+  background-color: var(--bg-glass);
+}
