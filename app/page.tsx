@@ -8,6 +8,7 @@ import { TournamentState } from '@/lib/types';
 import { useTheme } from '@/lib/theme';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
 import { createInitialTournamentState } from '@/lib/tournament';
+import { AuthChangeEvent, Session } from '@supabase/supabase-js';
 
 type Tab = 'grupos' | 'chaveamento';
 
@@ -395,7 +396,7 @@ export default function Home() {
   // Set up auth state change listener
   useEffect(() => {
     if (!isSupabaseConfigured) return;
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session: Session | null) => {
       const u = session?.user || null;
       setUser(u ? { id: u.id, email: u.email, is_anonymous: u.is_anonymous } : null);
 
