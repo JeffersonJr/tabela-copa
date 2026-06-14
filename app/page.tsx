@@ -71,7 +71,11 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
       password: password.trim(),
     });
     if (authError) {
-      setError(authError.message);
+      if (authError.message.toLowerCase().includes('rate limit')) {
+        setError('Muitas tentativas. Aguarde um momento.');
+      } else {
+        setError(authError.message);
+      }
       setLoading(false);
     }
   };
@@ -87,7 +91,11 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
       password: password.trim(),
     });
     if (authError) {
-      setError(authError.message);
+      if (authError.message.toLowerCase().includes('rate limit')) {
+        setError('Limite de cadastros excedido no servidor (muitos emails enviados). Tente novamente mais tarde.');
+      } else {
+        setError(authError.message);
+      }
       setLoading(false);
     } else if (data.session) {
       showSuccessMessage();
