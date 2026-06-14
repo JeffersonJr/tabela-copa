@@ -1189,7 +1189,7 @@ h1, h2, h3, h4, h5, h6 {
 @media (max-width: 768px) {
   .page-wrapper { padding: var(--space-md); }
   .header { padding: var(--space-md) 0; flex-direction: column; align-items: stretch; gap: var(--space-md); }
-  .header-brand { align-items: center; text-align: center; }
+  .header-brand { align-items: flex-start; text-align: left; }
   .header-actions { 
     width: 100%; 
     justify-content: center; 
@@ -1524,3 +1524,9 @@ h1, h2, h3, h4, h5, h6 {
 .admin-table tbody tr:hover {
   background-color: var(--bg-glass);
 }
+
+/* Logo Toggling */
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+

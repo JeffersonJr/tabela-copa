@@ -200,7 +200,8 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
     <div className="landing">
       <div className="landing-card animate-fadeIn">
         <div className="landing-logo-container">
-          <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="landing-logo" />
+          <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-light" />
+          <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-dark" />
         </div>
         <h1 className="landing-title">Copa 2026</h1>
         <p className="landing-sub">
@@ -388,7 +389,8 @@ export default function Home() {
       <div className="landing animate-fadeIn">
         <div className="landing-card" style={{ maxWidth: 460 }}>
           <div className="landing-logo-container">
-            <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="landing-logo" style={{ height: 100 }} />
+            <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-light" style={{ height: 100 }} />
+            <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-dark" style={{ height: 100 }} />
           </div>
           <h1 className="landing-title" style={{ fontSize: '1.5rem', marginBottom: 12 }}>Configuração Necessária ⚙️</h1>
           <p className="landing-sub" style={{ marginBottom: 20 }}>
@@ -682,7 +684,8 @@ export default function Home() {
       {/* Header */}
       <header className="header">
         <div className="header-brand">
-          <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="header-logo" />
+          <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-light" />
+          <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-dark" />
           <div>
             <h1 className="header-title">Copa 2026</h1>
             <span className="header-sub">FIFA World Cup · Canada · Mexico · USA</span>

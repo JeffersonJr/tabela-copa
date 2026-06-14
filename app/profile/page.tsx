@@ -201,7 +201,8 @@ export default function ProfilePage() {
     <div className="page-wrapper animate-fadeIn">
       <header className="header" style={{ marginBottom: 32 }}>
         <div className="header-brand" style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>
-          <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="header-logo" />
+          <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-light" />
+          <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-dark" />
           <div>
             <h1 className="header-title">Copa 2026</h1>
             <span className="header-sub">Voltar para Palpites</span>

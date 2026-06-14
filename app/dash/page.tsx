@@ -103,7 +103,8 @@ export default function AdminDashboard() {
       <div className="landing">
         <div className="landing-card animate-fadeIn" style={{ maxWidth: 400 }}>
           <div className="landing-logo-container">
-            <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="landing-logo" style={{ height: 90 }} />
+            <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-light" style={{ height: 90 }} />
+            <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="landing-logo logo-dark" style={{ height: 90 }} />
           </div>
           <h1 className="landing-title" style={{ fontSize: '1.5rem', marginBottom: 6 }}>Evolves Admin</h1>
           <p className="landing-sub" style={{ marginBottom: 20 }}>Acesso restrito ao painel administrativo</p>
@@ -149,8 +150,9 @@ export default function AdminDashboard() {
     <div className="page-wrapper animate-fadeIn">
       {/* Header */}
       <header className="header" style={{ marginBottom: 32 }}>
-        <div className="header-brand">
-          <img src="/logo.png" alt="FIFA World Cup 2026 Logo" className="header-logo" />
+        <div className="header-brand" style={{ cursor: 'pointer' }} onClick={() => router.push('/')}>
+          <img src="/logo-escura.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-light" />
+          <img src="/logo-clara.svg" alt="FIFA World Cup 2026 Logo" className="header-logo logo-dark" />
           <div>
             <h1 className="header-title">Evolves Copa Dashboard</h1>
             <span className="header-sub">Painel Administrativo de Monitoramento</span>
