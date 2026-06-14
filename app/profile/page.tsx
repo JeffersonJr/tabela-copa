@@ -129,7 +129,7 @@ export default function ProfilePage() {
 
       // Se já houver um fator pendente/não verificado (por ex: o usuário recarregou a página antes de confirmar), 
       // precisamos deletá-lo antes de gerar um novo, caso contrário a API do Supabase retorna erro.
-      const unverifiedFactors = allTotp.filter(f => f.status === 'unverified');
+      const unverifiedFactors = allTotp.filter((f: any) => f.status === 'unverified');
       for (const factor of unverifiedFactors) {
         await supabase.auth.mfa.unenroll({ factorId: factor.id });
       }
