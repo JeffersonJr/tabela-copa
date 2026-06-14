@@ -230,9 +230,51 @@ export const useTournamentStore = create<TournamentStore>((set, get) => ({
 
   resetTournament: () => {
     if (get().isReadOnly) return;
-    set({
-      tournament: createInitialTournamentState(),
-      isDirty: true,
+    set(state => {
+      const groups = { ...state.tournament.groups };
+      for (const groupId in groups) {
+        const group = groups[groupId];
+        const matches = group.matches.map(m => {
+          if (m.score.isDefinitive) return m;
+          return {
+            ...m,
+            played: false,
+            score: {
+              home: { first: null, second: null },
+              away: { first: null, second: null },
+              hasExtraTime: false,
+              hasPenalties: false,
+            }
+          };
+        });
+        const teamIds = GROUPS.find(g => g.id === groupId)!.teams.map(t => t.id);
+        const standings = calculateGroupStandings(teamIds, matches);
+        groups[groupId] = { ...group, matches, standings };
+      }
+
+      let knockout = { ...state.tournament.knockout };
+      for (const matchNum in knockout) {
+        const m = knockout[matchNum];
+        if (m.score.isDefinitive) continue;
+        knockout[matchNum] = {
+          ...m,
+          played: false,
+          score: {
+            home: { first: null, second: null },
+            away: { first: null, second: null },
+            hasExtraTime: false,
+            hasPenalties: false,
+          }
+        };
+      }
+
+      knockout = propagateGroupsToR32(knockout, { ...state.tournament, groups });
+      knockout = propagateKnockout(knockout);
+
+      return {
+        tournament: { groups, knockout },
+        isDirty: true,
+      };
     });
   },
 }));
