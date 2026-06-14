@@ -1186,20 +1186,28 @@ h1, h2, h3, h4, h5, h6 {
 /* ─── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .page-wrapper { padding: var(--space-md); }
-  .header { padding: var(--space-md) 0 var(--space-lg); }
+  .header { padding: var(--space-md) 0; flex-direction: column; align-items: stretch; gap: var(--space-md); }
+  .header-brand { align-items: center; text-align: center; }
+  .header-actions { width: 100%; justify-content: center; }
   .header-title { font-size: 1.5rem; }
   .tabs { width: 100%; }
   .tab { flex: 1; text-align: center; padding: 8px 12px; font-size: 0.8125rem; }
   .groups-grid { grid-template-columns: 1fr; }
+  .group-card { padding: var(--space-sm); border-radius: var(--radius-lg); }
   .score-row { grid-template-columns: 40px 1fr auto 1fr; }
   .modal-score-input { width: 44px; height: 36px; font-size: 0.875rem; }
   .bracket-match { width: 180px; }
   .bracket-match { margin: 4px 8px; }
+  .landing { padding: var(--space-md); }
 }
 
 @media (max-width: 480px) {
-  .header-actions { width: 100%; justify-content: flex-end; }
-  .landing-card { padding: var(--space-xl) var(--space-lg); }
+  .landing-card { padding: var(--space-lg) var(--space-md); }
+  .landing-logo { height: 80px; }
+  .landing-title { font-size: 1.5rem; }
+  .auth-form { gap: 12px; }
+  .user-badge-name { max-width: 60px; }
+  .share-popup { width: 90%; text-align: center; justify-content: center; }
 }
 
 /* ─── Supabase Integration UI ────────────────────────────────────────────── */
