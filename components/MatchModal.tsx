@@ -89,7 +89,7 @@ export default function MatchModal({ match, roundLabel, onUpdate, onClose }: Mat
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
             <span className="modal-vs">VS</span>
-            {(score.home.first !== null || score.home.second !== null) && (
+            {(score.home.first !== null) && (
               <span style={{
                 fontSize: '1.5rem',
                 fontWeight: 800,
@@ -109,20 +109,12 @@ export default function MatchModal({ match, roundLabel, onUpdate, onClose }: Mat
 
         {/* Score Inputs */}
         <div className="modal-scores">
-          {/* First Half */}
+        {/* Final Score */}
           <div className="score-row">
-            <span className="score-row-label">1T</span>
-            <ScoreInput id="h-1t" value={score.home.first} onChange={v => update({ home: { ...score.home, first: v } })} />
+            <span className="score-row-label">Placar</span>
+            <ScoreInput id="h-score" value={score.home.first} onChange={v => update({ home: { ...score.home, first: v } })} />
             <span className="score-row-sep">—</span>
-            <ScoreInput id="a-1t" value={score.away.first} onChange={v => update({ away: { ...score.away, first: v } })} />
-          </div>
-
-          {/* Second Half */}
-          <div className="score-row">
-            <span className="score-row-label">2T</span>
-            <ScoreInput id="h-2t" value={score.home.second} onChange={v => update({ home: { ...score.home, second: v } })} />
-            <span className="score-row-sep">—</span>
-            <ScoreInput id="a-2t" value={score.away.second} onChange={v => update({ away: { ...score.away, second: v } })} />
+            <ScoreInput id="a-score" value={score.away.first} onChange={v => update({ away: { ...score.away, first: v } })} />
           </div>
 
           {/* Extra Time */}

@@ -12,8 +12,8 @@ export function getFinalScore(score: MatchScore): { home: number; away: number }
   const awayFirst = score.away.first ?? 0;
   const awaySecond = score.away.second ?? 0;
 
-  let home = homeFirst + homeSecond;
-  let away = awayFirst + awaySecond;
+  let home = homeFirst;
+  let away = awayFirst;
 
   if (score.hasExtraTime && score.extraTime) {
     home += score.extraTime.home;
@@ -42,8 +42,8 @@ export function getWinner(match: Match): string | null {
 
 export function isMatchComplete(match: Match): boolean {
   const s = match.score;
-  if (s.home.first === null || s.home.second === null) return false;
-  if (s.away.first === null || s.away.second === null) return false;
+  if (s.home.first === null) return false;
+  if (s.away.first === null) return false;
   if (s.hasExtraTime && !s.extraTime) return false;
   if (s.hasPenalties && !s.penalties) return false;
   return true;
@@ -134,7 +134,7 @@ export function generateGroupMatches(groupId: string, teamIds: string[]): Match[
         homeTeamId: teamIds[a],
         awayTeamId: teamIds[b],
         played: false,
-        score: { home: { first: null, second: null }, away: { first: null, second: null }, hasExtraTime: false, hasPenalties: false },
+        score: { home: { first: null }, away: { first: null }, hasExtraTime: false, hasPenalties: false },
       });
     }
     return matches;

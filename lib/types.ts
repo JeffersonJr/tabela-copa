@@ -4,7 +4,6 @@
 
 export interface ScoreHalf {
   first: number | null;
-  second: number | null;
 }
 
 export interface MatchScore {

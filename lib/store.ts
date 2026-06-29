@@ -297,8 +297,8 @@ export const useTournamentStore = create<TournamentStore>((set, get) => ({
             ...m,
             played: false,
             score: {
-              home: { first: null, second: null },
-              away: { first: null, second: null },
+              home: { first: null },
+              away: { first: null },
               hasExtraTime: false,
               hasPenalties: false,
             }
@@ -317,8 +317,8 @@ export const useTournamentStore = create<TournamentStore>((set, get) => ({
           ...m,
           played: false,
           score: {
-            home: { first: null, second: null },
-            away: { first: null, second: null },
+            home: { first: null },
+            away: { first: null },
             hasExtraTime: false,
             hasPenalties: false,
           }
