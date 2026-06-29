@@ -109,22 +109,25 @@ function propagateGroupsToR32(
   }
 
   // R32 qualifications (official bracket mappings)
-  setHome(1, q['A']?.second ?? null);   setAway(1, q['B']?.second ?? null);
-  setHome(2, q['F']?.first ?? null);    setAway(2, q['C']?.second ?? null);
-  setHome(3, q['E']?.first ?? null);    setAway(3, assignedThirds[0]);
-  setHome(4, q['I']?.first ?? null);    setAway(4, assignedThirds[1]);
-  setHome(5, q['G']?.first ?? null);    setAway(5, assignedThirds[2]);
-  setHome(6, q['D']?.first ?? null);    setAway(6, assignedThirds[3]);
-  setHome(7, q['H']?.first ?? null);    setAway(7, q['J']?.second ?? null);
-  setHome(8, q['K']?.second ?? null);   setAway(8, q['L']?.second ?? null);
+  // Left half of bracket
+  setHome(1, q['E']?.first ?? null);    setAway(1, assignedThirds[0]);
+  setHome(2, q['I']?.first ?? null);    setAway(2, assignedThirds[1]);
+  setHome(3, q['A']?.second ?? null);   setAway(3, q['B']?.second ?? null);
+  setHome(4, q['F']?.first ?? null);    setAway(4, q['C']?.second ?? null);
+  setHome(5, q['K']?.first ?? null);    setAway(5, assignedThirds[7]);
+  setHome(6, q['H']?.first ?? null);    setAway(6, q['J']?.second ?? null);
+  setHome(7, q['D']?.first ?? null);    setAway(7, assignedThirds[3]);
+  setHome(8, q['G']?.first ?? null);    setAway(8, assignedThirds[2]);
+
+  // Right half of bracket
   setHome(9, q['C']?.first ?? null);    setAway(9, q['F']?.second ?? null);
   setHome(10, q['E']?.second ?? null);  setAway(10, q['I']?.second ?? null);
   setHome(11, q['A']?.first ?? null);   setAway(11, assignedThirds[4]);
   setHome(12, q['L']?.first ?? null);   setAway(12, assignedThirds[5]);
-  setHome(13, q['B']?.first ?? null);   setAway(13, assignedThirds[6]);
-  setHome(14, q['K']?.first ?? null);   setAway(14, assignedThirds[7]);
-  setHome(15, q['D']?.second ?? null);  setAway(15, q['G']?.second ?? null);
-  setHome(16, q['J']?.first ?? null);   setAway(16, q['H']?.second ?? null);
+  setHome(13, q['J']?.first ?? null);   setAway(13, q['H']?.second ?? null);
+  setHome(14, q['D']?.second ?? null);  setAway(14, q['G']?.second ?? null);
+  setHome(15, q['B']?.first ?? null);   setAway(15, assignedThirds[6]);
+  setHome(16, q['K']?.second ?? null);  setAway(16, q['L']?.second ?? null);
 
   return updated;
 }
