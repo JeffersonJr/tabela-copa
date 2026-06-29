@@ -159,9 +159,6 @@ function Podium({ tournament }: { tournament: any }) {
 export default function BracketView() {
   const { tournament, updateKnockoutMatch } = useTournamentStore();
   const [openMatchNum, setOpenMatchNum] = useState<number | null>(null);
-export default function BracketView() {
-  const { tournament, updateKnockoutMatch } = useTournamentStore();
-  const [openMatchNum, setOpenMatchNum] = useState<number | null>(null);
 
   const openMatch = openMatchNum !== null ? tournament.knockout[openMatchNum] : null;
 
