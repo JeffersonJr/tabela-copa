@@ -134,7 +134,7 @@ export function generateGroupMatches(groupId: string, teamIds: string[]): Match[
 // Best Third-Place Teams
 // ────────────────────────────────────────────────────────────────────────────
 
-export function getBestThirds(groups: Record<string, GroupState>): { teamId: string; groupId: string }[] {
+export function getAllThirds(groups: Record<string, GroupState>): { teamId: string; groupId: string; standing: GroupStanding }[] {
   const thirds: { standing: GroupStanding; groupId: string }[] = [];
 
   for (const group of Object.values(groups)) {
@@ -151,7 +151,11 @@ export function getBestThirds(groups: Record<string, GroupState>): { teamId: str
     return 0;
   });
 
-  return thirds.slice(0, 8).map(s => ({ teamId: s.standing.teamId, groupId: s.groupId }));
+  return thirds.map(s => ({ teamId: s.standing.teamId, groupId: s.groupId, standing: s.standing }));
+}
+
+export function getBestThirds(groups: Record<string, GroupState>): { teamId: string; groupId: string }[] {
+  return getAllThirds(groups).slice(0, 8).map(t => ({ teamId: t.teamId, groupId: t.groupId }));
 }
 
 // ────────────────────────────────────────────────────────────────────────────

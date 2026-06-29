@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useTournamentStore } from '@/lib/store';
 import GroupCard from '@/components/GroupCard';
 import BracketView from '@/components/BracketView';
+import ThirdPlaceTable from '@/components/ThirdPlaceTable';
 import GROUPS from '@/data/teams';
 import { TournamentState } from '@/lib/types';
 import { useTheme } from '@/lib/theme';
@@ -814,14 +815,17 @@ export default function Home() {
 
       {/* Content */}
       {tab === 'grupos' && (
-        <div className="groups-grid" role="tabpanel" aria-labelledby="tab-grupos">
-          {GROUPS.map(group => (
-            <GroupCard
-              key={group.id}
-              groupId={group.id}
-              groupState={tournament.groups[group.id]}
-            />
-          ))}
+        <div role="tabpanel" aria-labelledby="tab-grupos">
+          <div className="groups-grid">
+            {GROUPS.map(group => (
+              <GroupCard
+                key={group.id}
+                groupId={group.id}
+                groupState={tournament.groups[group.id]}
+              />
+            ))}
+          </div>
+          <ThirdPlaceTable />
         </div>
       )}
 
