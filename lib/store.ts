@@ -68,52 +68,37 @@ function propagateGroupsToR32(
   let assignedThirds: (string | null)[] = Array(8).fill(null);
   
   if (best8thirds.length === 8) {
-    const used = Array(8).fill(false);
-    const validMatchings: string[][] = [];
-    function backtrack(slotIndex: number, currentAssignment: (string | null)[]) {
-      if (slotIndex === 8) {
-        validMatchings.push([...currentAssignment] as string[]);
-        return;
-      }
-      for (let i = 0; i < 8; i++) {
-        if (!used[i] && slotsAllowedGroups[slotIndex].includes(best8thirds[i].groupId)) {
-          used[i] = true;
-          currentAssignment[slotIndex] = best8thirds[i].teamId;
-          backtrack(slotIndex + 1, currentAssignment);
-          used[i] = false;
-          currentAssignment[slotIndex] = null;
-        }
-      }
-    }
+    // Import the official FIFA Annex C mapping
+    const { annexCMapping } = require('./annexC');
     
-    // Sort best8thirds alphabetically by groupId so the search order is deterministic
-    // and doesn't depend on points (which causes matchups to flip).
-    best8thirds.sort((a, b) => a.groupId.localeCompare(b.groupId));
-    backtrack(0, new Array(8).fill(null));
-
-    if (validMatchings.length > 0) {
-      // Find the one that corresponds to the official FIFA Annex C table
-      // Since we don't have the 495-row table, we use the first valid one,
-      // but we hardcode the specific known fix for the combination B,D,E,F,I,J,K,L 
-      const groupsStr = best8thirds.map(t => t.groupId).join('');
-      let chosen = validMatchings[0];
+    // The keys in annexCMapping are the 8 group letters sorted alphabetically (e.g. 'BDEFIJKL')
+    const sortedGroups = best8thirds.map(t => t.groupId).sort().join('');
+    const assignment = annexCMapping[sortedGroups];
+    
+    if (assignment) {
+      // We map the official assignments (which are group letters) back to the teamId.
+      const teamForGroup = (grp: string) => best8thirds.find(t => t.groupId === grp)?.teamId ?? null;
       
-      if (groupsStr === 'BDEFIJKL') {
-        const expectedGroups = ['D', 'F', 'I', 'B', 'E', 'K', 'J', 'L'];
-        const found = validMatchings.find(m => {
-          // m contains teamIds, we need to check their groups
-          const mGroups = m.map(teamId => best8thirds.find(t => t.teamId === teamId)?.groupId);
-          return mGroups.join('') === expectedGroups.join('');
-        });
-        if (found) chosen = found;
-      }
-      
-      for (let i = 0; i < 8; i++) {
-        assignedThirds[i] = chosen[i] ?? null;
-      }
+      // The order of our assignedThirds matches the official match slots:
+      // assignedThirds[0] -> Match 3 (1E)
+      // assignedThirds[1] -> Match 4 (1I)
+      // assignedThirds[2] -> Match 5 (1G)
+      // assignedThirds[3] -> Match 6 (1D)
+      // assignedThirds[4] -> Match 11 (1A)
+      // assignedThirds[5] -> Match 12 (1L)
+      // assignedThirds[6] -> Match 13 (1B)
+      // assignedThirds[7] -> Match 14 (1K)
+      assignedThirds[0] = teamForGroup(assignment['1E']);
+      assignedThirds[1] = teamForGroup(assignment['1I']);
+      assignedThirds[2] = teamForGroup(assignment['1G']);
+      assignedThirds[3] = teamForGroup(assignment['1D']);
+      assignedThirds[4] = teamForGroup(assignment['1A']);
+      assignedThirds[5] = teamForGroup(assignment['1L']);
+      assignedThirds[6] = teamForGroup(assignment['1B']);
+      assignedThirds[7] = teamForGroup(assignment['1K']);
     } else {
-      // Fallback if no valid matching is found
-      for (let i = 0; i < best8thirds.length; i++) {
+      // Fallback if not found (shouldn't happen with 495 complete mappings)
+      for (let i = 0; i < 8; i++) {
         assignedThirds[i] = best8thirds[i].teamId;
       }
     }
