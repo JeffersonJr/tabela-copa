@@ -10,6 +10,7 @@ import { useTheme } from '@/lib/theme';
 import { supabase, isSupabaseConfigured } from '@/lib/supabaseClient';
 import { createInitialTournamentState } from '@/lib/tournament';
 import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import packageJson from '../package.json';
 
 type Tab = 'grupos' | 'chaveamento';
 
@@ -362,6 +363,7 @@ function LandingPage({ onJoin }: { onJoin: (id: string) => void }) {
       {/* Footer */}
       <footer className="app-footer landing-footer">
         <span>Powered by <a href="https://evolves.site" target="_blank" rel="noopener noreferrer">Evolves Tecnologia</a> · <a href="mailto:contato@evolves.site">contato@evolves.site</a></span>
+        <span style={{ marginLeft: 12, fontSize: '0.75rem', opacity: 0.6 }}>v{packageJson.version}</span>
       </footer>
     </div>
   );
@@ -417,6 +419,7 @@ export default function Home() {
           
           <footer className="app-footer landing-footer" style={{ marginTop: 28 }}>
             <span>Powered by <a href="https://evolves.site" target="_blank" rel="noopener noreferrer">Evolves Tecnologia</a> · <a href="mailto:contato@evolves.site">contato@evolves.site</a></span>
+            <span style={{ marginLeft: 12, fontSize: '0.75rem', opacity: 0.6 }}>v{packageJson.version}</span>
           </footer>
         </div>
       </div>
@@ -869,6 +872,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="app-footer">
         <span>Powered by <a href="https://evolves.site" target="_blank" rel="noopener noreferrer">Evolves Tecnologia</a> · <a href="mailto:contato@evolves.site">contato@evolves.site</a></span>
+        <span style={{ marginLeft: 12, fontSize: '0.75rem', opacity: 0.6 }}>v{packageJson.version}</span>
       </footer>
     </div>
   );
