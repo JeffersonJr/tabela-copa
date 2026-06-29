@@ -134,24 +134,24 @@ export function generateGroupMatches(groupId: string, teamIds: string[]): Match[
 // Best Third-Place Teams
 // ────────────────────────────────────────────────────────────────────────────
 
-export function getBestThirds(groups: Record<string, GroupState>): string[] {
-  const thirds: GroupStanding[] = [];
+export function getBestThirds(groups: Record<string, GroupState>): { teamId: string; groupId: string }[] {
+  const thirds: { standing: GroupStanding; groupId: string }[] = [];
 
   for (const group of Object.values(groups)) {
     if (group.standings.length >= 3) {
-      thirds.push(group.standings[2]);
+      thirds.push({ standing: group.standings[2], groupId: group.id });
     }
   }
 
   // Sort same as group standings but among all thirds
   thirds.sort((a, b) => {
-    if (b.points !== a.points) return b.points - a.points;
-    if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
-    if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+    if (b.standing.points !== a.standing.points) return b.standing.points - a.standing.points;
+    if (b.standing.goalDiff !== a.standing.goalDiff) return b.standing.goalDiff - a.standing.goalDiff;
+    if (b.standing.goalsFor !== a.standing.goalsFor) return b.standing.goalsFor - a.standing.goalsFor;
     return 0;
   });
 
-  return thirds.slice(0, 8).map(s => s.teamId);
+  return thirds.slice(0, 8).map(s => ({ teamId: s.standing.teamId, groupId: s.groupId }));
 }
 
 // ────────────────────────────────────────────────────────────────────────────

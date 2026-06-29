@@ -54,23 +54,58 @@ function propagateGroupsToR32(
     updated[matchNum] = { ...updated[matchNum], awayTeamId: teamId };
   }
 
+  const slotsAllowedGroups = [
+    ['A', 'B', 'C', 'D', 'F'], // Match 3
+    ['C', 'D', 'F', 'G', 'H'], // Match 6
+    ['C', 'E', 'F', 'H', 'I'], // Match 7
+    ['E', 'H', 'I', 'J', 'K'], // Match 8
+    ['A', 'E', 'H', 'I', 'J'], // Match 9
+    ['B', 'E', 'F', 'I', 'J'], // Match 10
+    ['E', 'F', 'G', 'I', 'J'], // Match 13
+    ['D', 'E', 'I', 'J', 'L'], // Match 16
+  ];
+
+  let assignedThirds: (string | null)[] = Array(8).fill(null);
+  
+  if (best8thirds.length === 8) {
+    const used = Array(8).fill(false);
+    function backtrack(slotIndex: number): boolean {
+      if (slotIndex === 8) return true;
+      for (let i = 0; i < 8; i++) {
+        if (!used[i] && slotsAllowedGroups[slotIndex].includes(best8thirds[i].groupId)) {
+          used[i] = true;
+          assignedThirds[slotIndex] = best8thirds[i].teamId;
+          if (backtrack(slotIndex + 1)) return true;
+          used[i] = false;
+          assignedThirds[slotIndex] = null;
+        }
+      }
+      return false;
+    }
+    backtrack(0);
+  } else {
+    for (let i = 0; i < best8thirds.length; i++) {
+      assignedThirds[i] = best8thirds[i].teamId;
+    }
+  }
+
   // R32 qualifications (official bracket)
   setHome(1, q['A']?.second ?? null);   setAway(1, q['B']?.second ?? null);
   setHome(2, q['C']?.first ?? null);    setAway(2, q['F']?.second ?? null);
-  setHome(3, q['E']?.first ?? null);    setAway(3, best8thirds[0] ?? null);
+  setHome(3, q['E']?.first ?? null);    setAway(3, assignedThirds[0]);
   setHome(4, q['F']?.first ?? null);    setAway(4, q['C']?.second ?? null);
   setHome(5, q['E']?.second ?? null);   setAway(5, q['I']?.second ?? null);
-  setHome(6, q['I']?.first ?? null);    setAway(6, best8thirds[1] ?? null);
-  setHome(7, q['A']?.first ?? null);    setAway(7, best8thirds[2] ?? null);
-  setHome(8, q['L']?.first ?? null);    setAway(8, best8thirds[3] ?? null);
-  setHome(9, q['G']?.first ?? null);    setAway(9, best8thirds[4] ?? null);
-  setHome(10, q['D']?.first ?? null);   setAway(10, best8thirds[5] ?? null);
+  setHome(6, q['I']?.first ?? null);    setAway(6, assignedThirds[1]);
+  setHome(7, q['A']?.first ?? null);    setAway(7, assignedThirds[2]);
+  setHome(8, q['L']?.first ?? null);    setAway(8, assignedThirds[3]);
+  setHome(9, q['G']?.first ?? null);    setAway(9, assignedThirds[4]);
+  setHome(10, q['D']?.first ?? null);   setAway(10, assignedThirds[5]);
   setHome(11, q['H']?.first ?? null);   setAway(11, q['J']?.second ?? null);
   setHome(12, q['K']?.second ?? null);  setAway(12, q['L']?.second ?? null);
-  setHome(13, q['B']?.first ?? null);   setAway(13, best8thirds[6] ?? null);
+  setHome(13, q['B']?.first ?? null);   setAway(13, assignedThirds[6]);
   setHome(14, q['D']?.second ?? null);  setAway(14, q['G']?.second ?? null);
   setHome(15, q['J']?.first ?? null);   setAway(15, q['H']?.second ?? null);
-  setHome(16, q['K']?.first ?? null);   setAway(16, best8thirds[7] ?? null);
+  setHome(16, q['K']?.first ?? null);   setAway(16, assignedThirds[7]);
 
   return updated;
 }
