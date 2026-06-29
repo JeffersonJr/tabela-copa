@@ -211,24 +211,24 @@ export function createInitialGroupState(): Record<string, GroupState> {
 export function createKnockoutBracket(): Record<number, KnockoutMatch> {
   const r32: Partial<KnockoutMatch>[] = [
     // Left half of bracket
-    { matchNumber: 1, homeLabel: '1º Grupo E', awayLabel: '3º Melhor (A/B/C/D/F)' },
-    { matchNumber: 2, homeLabel: '1º Grupo I', awayLabel: '3º Melhor (C/D/F/G/H)' },
+    { matchNumber: 1, homeLabel: '1º Grupo E', awayLabel: '7º dos 3º Colocados' },
+    { matchNumber: 2, homeLabel: '1º Grupo I', awayLabel: '2º dos 3º Colocados' },
     { matchNumber: 3, homeLabel: '2º Grupo A', awayLabel: '2º Grupo B' },
     { matchNumber: 4, homeLabel: '1º Grupo F', awayLabel: '2º Grupo C' },
-    { matchNumber: 5, homeLabel: '1º Grupo K', awayLabel: '3º Melhor (D/E/I/J/L)' },
+    { matchNumber: 5, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
     { matchNumber: 6, homeLabel: '1º Grupo H', awayLabel: '2º Grupo J' },
-    { matchNumber: 7, homeLabel: '1º Grupo D', awayLabel: '3º Melhor (B/E/F/I/J)' },
-    { matchNumber: 8, homeLabel: '1º Grupo G', awayLabel: '3º Melhor (A/E/H/I/J)' },
+    { matchNumber: 7, homeLabel: '1º Grupo D', awayLabel: '5º dos 3º Colocados' },
+    { matchNumber: 8, homeLabel: '1º Grupo G', awayLabel: '8º dos 3º Colocados' },
     
     // Right half of bracket
     { matchNumber: 9, homeLabel: '1º Grupo C', awayLabel: '2º Grupo F' },
     { matchNumber: 10, homeLabel: '2º Grupo E', awayLabel: '2º Grupo I' },
-    { matchNumber: 11, homeLabel: '1º Grupo A', awayLabel: '3º Melhor (C/E/F/H/I)' },
-    { matchNumber: 12, homeLabel: '1º Grupo L', awayLabel: '3º Melhor (E/H/I/J/K)' },
+    { matchNumber: 11, homeLabel: '1º Grupo A', awayLabel: '3º dos 3º Colocados' },
+    { matchNumber: 12, homeLabel: '1º Grupo L', awayLabel: '1º dos 3º Colocados' },
     { matchNumber: 13, homeLabel: '1º Grupo J', awayLabel: '2º Grupo H' },
     { matchNumber: 14, homeLabel: '2º Grupo D', awayLabel: '2º Grupo G' },
-    { matchNumber: 15, homeLabel: '1º Grupo B', awayLabel: '3º Melhor (E/F/G/I/J)' },
-    { matchNumber: 16, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
+    { matchNumber: 15, homeLabel: '1º Grupo B', awayLabel: '6º dos 3º Colocados' },
+    { matchNumber: 16, homeLabel: '1º Grupo K', awayLabel: '4º dos 3º Colocados' },
   ];
 
   // R16 matches (winners of R32 matches)
