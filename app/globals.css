@@ -1530,3 +1530,95 @@ h1, h2, h3, h4, h5, h6 {
 [data-theme="dark"] .logo-light { display: none; }
 [data-theme="dark"] .logo-dark { display: block; }
 
+
+/* Bracket Tree UI */
+.bracket-wrapper {
+  display: flex;
+  overflow-x: auto;
+  padding: 20px 0;
+  width: 100%;
+}
+
+.bracket-container {
+  display: flex;
+  min-width: min-content;
+  margin: 0 auto;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.bracket-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 220px; /* compact card width */
+}
+
+.bracket-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 280px;
+  gap: 40px;
+}
+
+.bracket-match-node {
+  position: relative;
+  margin: 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* Simplified lines for left half */
+.bracket-half-left .bracket-col:not(:last-child) .bracket-match-node::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.bracket-half-left .bracket-col:not(:first-child) .bracket-match-node::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+/* Simplified lines for right half */
+.bracket-half-right .bracket-col:not(:last-child) .bracket-match-node::before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  width: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+.bracket-half-right .bracket-col:not(:first-child) .bracket-match-node::after {
+  content: "";
+  position: absolute;
+  right: -10px;
+  top: 50%;
+  width: 10px;
+  border-bottom: 2px solid var(--border);
+}
+
+/* Custom compact card */
+.bracket-match.compact {
+  max-width: 220px !important;
+  font-size: 0.85rem;
+  padding: 8px;
+}
+.bracket-match.compact .bracket-team-row {
+  padding: 4px 6px;
+}
+.bracket-match.compact .bracket-match-num {
+  font-size: 0.6rem;
+  top: 2px;
+  right: 4px;
+}

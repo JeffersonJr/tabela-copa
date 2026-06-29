@@ -7,13 +7,7 @@ import { useTournamentStore } from '@/lib/store';
 import TeamFlag from '@/components/TeamFlag';
 import MatchModal from '@/components/MatchModal';
 
-const ROUND_TABS = [
-  { id: 'r32', label: '16-Avos' },
-  { id: 'r16', label: 'Oitavas' },
-  { id: 'qf', label: 'Quartas' },
-  { id: 'sf', label: 'Semifinal' },
-  { id: 'finais', label: 'Finais' },
-];
+
 
 interface BracketTeamRowProps {
   teamId: string | null;
@@ -45,16 +39,18 @@ function BracketTeamRow({ teamId, label, score, isWinner, isPlayed }: BracketTea
 interface BracketMatchCardProps {
   match: KnockoutMatch;
   onOpen: (matchNumber: number) => void;
+  variant?: 'compact' | 'default';
 }
 
-function BracketMatchCard({ match, onOpen }: BracketMatchCardProps) {
+function BracketMatchCard({ match, onOpen, variant = 'default' }: BracketMatchCardProps) {
   const total = getFinalScore(match.score);
   const winner = getWinner(match);
   const canPlay = !!(match.homeTeamId && match.awayTeamId);
+  const compactClass = variant === 'compact' ? 'compact' : '';
 
   return (
     <div
-      className={`bracket-match ${match.played ? 'active' : ''}`}
+      className={`bracket-match ${match.played ? 'active' : ''} ${compactClass}`}
       onClick={() => canPlay && onOpen(match.matchNumber)}
       style={{ cursor: canPlay ? 'pointer' : 'default', opacity: canPlay ? 1 : 0.6, width: '100%', maxWidth: '360px', margin: 0 }}
       title={canPlay ? 'Clique para inserir placar' : 'Aguardando resultado anterior'}
@@ -163,7 +159,9 @@ function Podium({ tournament }: { tournament: any }) {
 export default function BracketView() {
   const { tournament, updateKnockoutMatch } = useTournamentStore();
   const [openMatchNum, setOpenMatchNum] = useState<number | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('r32');
+export default function BracketView() {
+  const { tournament, updateKnockoutMatch } = useTournamentStore();
+  const [openMatchNum, setOpenMatchNum] = useState<number | null>(null);
 
   const openMatch = openMatchNum !== null ? tournament.knockout[openMatchNum] : null;
 
@@ -175,61 +173,120 @@ export default function BracketView() {
       if (!groups[round]) groups[round] = [];
       groups[round].push(match);
     }
-    // Sort each round by match number
     for (const round of Object.keys(groups)) {
       groups[round].sort((a, b) => a.matchNumber - b.matchNumber);
     }
     return groups;
   }, [tournament.knockout]);
 
-  const displayMatches = useMemo(() => {
-    if (activeTab === 'finais') {
-      return [...(roundGroups['third'] || []), ...(roundGroups['final'] || [])];
-    }
-    return roundGroups[activeTab] || [];
-  }, [activeTab, roundGroups]);
+  const r32 = roundGroups['r32'] || [];
+  const r16 = roundGroups['r16'] || [];
+  const qf = roundGroups['qf'] || [];
+  const sf = roundGroups['sf'] || [];
+  
+  // Left side
+  const r32_left = r32.slice(0, 8);
+  const r16_left = r16.slice(0, 4);
+  const qf_left = qf.slice(0, 2);
+  const sf_left = sf.slice(0, 1);
+  
+  // Right side
+  const r32_right = r32.slice(8, 16);
+  const r16_right = r16.slice(4, 8);
+  const qf_right = qf.slice(2, 4);
+  const sf_right = sf.slice(1, 2);
+
+  const thirdPlace = roundGroups['third']?.[0];
+  const finalMatch = roundGroups['final']?.[0];
 
   return (
-    <div className="animate-fadeIn">
-      {/* Sub-Tabs for Knockout Rounds */}
-      <div className="tabs" role="tablist" style={{ overflowX: 'auto', maxWidth: '100%', display: 'flex', gap: 4, paddingBottom: 4, marginBottom: 24, border: 'none', background: 'transparent' }}>
-        {ROUND_TABS.map(tab => (
-          <button
-            key={tab.id}
-            className={`tab ${activeTab === tab.id ? 'active' : ''}`}
-            role="tab"
-            aria-selected={activeTab === tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            style={{ flexShrink: 0, padding: '8px 16px', border: '1px solid var(--border)', background: activeTab === tab.id ? 'var(--bg-card)' : 'transparent', color: activeTab === tab.id ? 'var(--accent)' : 'var(--text-secondary)' }}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === 'finais' ? (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 32 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
-            {displayMatches.map(match => (
-              <div key={match.matchNumber} style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <h3 style={{ marginBottom: 12, fontSize: '1rem', color: match.round === 'final' ? '#FFD700' : '#CD7F32', fontWeight: 'bold' }}>
-                  {match.round === 'final' ? '🏆 Grande Final' : '🥉 Disputa do 3º Lugar'}
-                </h3>
-                <BracketMatchCard match={match} onOpen={setOpenMatchNum} />
-              </div>
-            ))}
-          </div>
-          <Podium tournament={tournament} />
-        </div>
-      ) : (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-          {displayMatches.map(match => (
-            <div key={match.matchNumber} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-              <BracketMatchCard match={match} onOpen={setOpenMatchNum} />
+    <div className="animate-fadeIn" style={{ width: '100%' }}>
+      <div className="bracket-wrapper">
+        <div className="bracket-container">
+          {/* Lado Esquerdo */}
+          <div className="bracket-half-left" style={{ display: 'flex', gap: 20 }}>
+            <div className="bracket-col">
+              {r32_left.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
             </div>
-          ))}
+            <div className="bracket-col">
+              {r16_left.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+            <div className="bracket-col">
+              {qf_left.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+            <div className="bracket-col">
+              {sf_left.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Centro (Finais e Pódio) */}
+          <div className="bracket-center">
+            {finalMatch && (
+              <div style={{ textAlign: 'center', width: '100%' }}>
+                <h3 style={{ color: '#FFD700', fontSize: '1rem', marginBottom: 8, fontWeight: 'bold' }}>🏆 Grande Final</h3>
+                <BracketMatchCard match={finalMatch} onOpen={setOpenMatchNum} />
+              </div>
+            )}
+            
+            <Podium tournament={tournament} />
+
+            {thirdPlace && (
+              <div style={{ textAlign: 'center', width: '100%', marginTop: 16 }}>
+                <h3 style={{ color: '#CD7F32', fontSize: '1rem', marginBottom: 8, fontWeight: 'bold' }}>🥉 3º Lugar</h3>
+                <BracketMatchCard match={thirdPlace} onOpen={setOpenMatchNum} />
+              </div>
+            )}
+          </div>
+
+          {/* Lado Direito */}
+          <div className="bracket-half-right" style={{ display: 'flex', gap: 20, flexDirection: 'row-reverse' }}>
+            <div className="bracket-col">
+              {r32_right.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+            <div className="bracket-col">
+              {r16_right.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+            <div className="bracket-col">
+              {qf_right.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+            <div className="bracket-col">
+              {sf_right.map(m => (
+                <div className="bracket-match-node" key={m.matchNumber}>
+                  <BracketMatchCard variant="compact" match={m} onOpen={setOpenMatchNum} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
-      )}
+      </div>
 
       {/* Score Modal */}
       {openMatch && (
