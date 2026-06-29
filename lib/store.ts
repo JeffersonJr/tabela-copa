@@ -69,18 +69,6 @@ function propagateGroupsToR32(
   
   if (best8thirds.length === 8) {
     const used = Array(8).fill(false);
-    function backtrack(slotIndex: number): boolean {
-      if (slotIndex === 8) return true;
-      for (let i = 0; i < 8; i++) {
-        if (!used[i] && slotsAllowedGroups[slotIndex].includes(best8thirds[i].groupId)) {
-          used[i] = true;
-          assignedThirds[slotIndex] = best8thirds[i].teamId;
-          if (backtrack(slotIndex + 1)) return true;
-          used[i] = false;
-          assignedThirds[slotIndex] = null;
-        }
-      }
-      return false;
     const validMatchings: string[][] = [];
     function backtrack(slotIndex: number, currentAssignment: (string | null)[]) {
       if (slotIndex === 8) {
@@ -122,7 +110,7 @@ function propagateGroupsToR32(
       }
       
       for (let i = 0; i < 8; i++) {
-        assignedThirds[i] = chosen[i];
+        assignedThirds[i] = chosen[i] ?? null;
       }
     } else {
       // Fallback if no valid matching is found
@@ -130,6 +118,11 @@ function propagateGroupsToR32(
         assignedThirds[i] = best8thirds[i].teamId;
       }
     }
+  } else {
+    for (let i = 0; i < best8thirds.length; i++) {
+      assignedThirds[i] = best8thirds[i].teamId;
+    }
+  }
 
   // R32 qualifications (official bracket)
   setHome(1, q['A']?.second ?? null);   setAway(1, q['B']?.second ?? null);
