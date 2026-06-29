@@ -81,10 +81,38 @@ export function calculateGroupStandings(teamIds: string[], matches: Match[]): Gr
 
   Object.values(standings).forEach(s => { s.goalDiff = s.goalsFor - s.goalsAgainst; });
 
+  const getH2HStats = (tiedTeams: string[]) => {
+    const h2h: Record<string, { points: number, goalDiff: number, goalsFor: number }> = {};
+    tiedTeams.forEach(id => h2h[id] = { points: 0, goalDiff: 0, goalsFor: 0 });
+
+    for (const match of matches) {
+      if (!match.played || !match.homeTeamId || !match.awayTeamId) continue;
+      if (tiedTeams.includes(match.homeTeamId) && tiedTeams.includes(match.awayTeamId)) {
+        const { home, away } = getFinalScore(match.score);
+        h2h[match.homeTeamId].goalsFor += home;
+        h2h[match.homeTeamId].goalDiff += (home - away);
+        h2h[match.awayTeamId].goalsFor += away;
+        h2h[match.awayTeamId].goalDiff += (away - home);
+
+        if (home > away) h2h[match.homeTeamId].points += 3;
+        else if (away > home) h2h[match.awayTeamId].points += 3;
+        else { h2h[match.homeTeamId].points += 1; h2h[match.awayTeamId].points += 1; }
+      }
+    }
+    return h2h;
+  };
+
   return Object.values(standings).sort((a, b) => {
     if (b.points !== a.points) return b.points - a.points;
     if (b.goalDiff !== a.goalDiff) return b.goalDiff - a.goalDiff;
     if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
+
+    // Head-to-head
+    const h2h = getH2HStats([a.teamId, b.teamId]);
+    if (h2h[b.teamId].points !== h2h[a.teamId].points) return h2h[b.teamId].points - h2h[a.teamId].points;
+    if (h2h[b.teamId].goalDiff !== h2h[a.teamId].goalDiff) return h2h[b.teamId].goalDiff - h2h[a.teamId].goalDiff;
+    if (h2h[b.teamId].goalsFor !== h2h[a.teamId].goalsFor) return h2h[b.teamId].goalsFor - h2h[a.teamId].goalsFor;
+
     return a.teamId.localeCompare(b.teamId);
   });
 }
