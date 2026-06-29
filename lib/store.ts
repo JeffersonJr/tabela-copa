@@ -55,14 +55,14 @@ function propagateGroupsToR32(
   }
 
   const slotsAllowedGroups = [
-    ['A', 'B', 'C', 'D', 'F'], // Match 3
-    ['C', 'D', 'F', 'G', 'H'], // Match 6
-    ['C', 'E', 'F', 'H', 'I'], // Match 7
-    ['E', 'H', 'I', 'J', 'K'], // Match 8
-    ['A', 'E', 'H', 'I', 'J'], // Match 9
-    ['B', 'E', 'F', 'I', 'J'], // Match 10
-    ['E', 'F', 'G', 'I', 'J'], // Match 13
-    ['D', 'E', 'I', 'J', 'L'], // Match 16
+    ['A', 'B', 'C', 'D', 'F'], // Match 4 (1E)
+    ['C', 'D', 'F', 'G', 'H'], // Match 5 (1I)
+    ['A', 'E', 'H', 'I', 'J'], // Match 6 (1G)
+    ['B', 'E', 'F', 'I', 'J'], // Match 7 (1D)
+    ['C', 'E', 'F', 'H', 'I'], // Match 11 (1A)
+    ['E', 'H', 'I', 'J', 'K'], // Match 12 (1L)
+    ['E', 'F', 'G', 'I', 'J'], // Match 13 (1B)
+    ['D', 'E', 'I', 'J', 'L'], // Match 14 (1K)
   ];
 
   let assignedThirds: (string | null)[] = Array(8).fill(null);
@@ -95,12 +95,11 @@ function propagateGroupsToR32(
       // Find the one that corresponds to the official FIFA Annex C table
       // Since we don't have the 495-row table, we use the first valid one,
       // but we hardcode the specific known fix for the combination B,D,E,F,I,J,K,L 
-      // (which maps to matches 3,6,7,8,9,10,13,16 -> D, F, E, K, I, B, J, L).
       const groupsStr = best8thirds.map(t => t.groupId).join('');
       let chosen = validMatchings[0];
       
       if (groupsStr === 'BDEFIJKL') {
-        const expectedGroups = ['D', 'F', 'E', 'K', 'I', 'B', 'J', 'L'];
+        const expectedGroups = ['D', 'F', 'I', 'B', 'E', 'K', 'J', 'L'];
         const found = validMatchings.find(m => {
           // m contains teamIds, we need to check their groups
           const mGroups = m.map(teamId => best8thirds.find(t => t.teamId === teamId)?.groupId);
@@ -124,23 +123,23 @@ function propagateGroupsToR32(
     }
   }
 
-  // R32 qualifications (official bracket)
+  // R32 qualifications (official bracket mappings)
   setHome(1, q['A']?.second ?? null);   setAway(1, q['B']?.second ?? null);
   setHome(2, q['C']?.first ?? null);    setAway(2, q['F']?.second ?? null);
-  setHome(3, q['E']?.first ?? null);    setAway(3, assignedThirds[0]);
-  setHome(4, q['F']?.first ?? null);    setAway(4, q['C']?.second ?? null);
-  setHome(5, q['E']?.second ?? null);   setAway(5, q['I']?.second ?? null);
-  setHome(6, q['I']?.first ?? null);    setAway(6, assignedThirds[1]);
-  setHome(7, q['A']?.first ?? null);    setAway(7, assignedThirds[2]);
-  setHome(8, q['L']?.first ?? null);    setAway(8, assignedThirds[3]);
-  setHome(9, q['G']?.first ?? null);    setAway(9, assignedThirds[4]);
-  setHome(10, q['D']?.first ?? null);   setAway(10, assignedThirds[5]);
-  setHome(11, q['H']?.first ?? null);   setAway(11, q['J']?.second ?? null);
-  setHome(12, q['K']?.second ?? null);  setAway(12, q['L']?.second ?? null);
+  setHome(3, q['F']?.first ?? null);    setAway(3, q['C']?.second ?? null);
+  setHome(4, q['E']?.first ?? null);    setAway(4, assignedThirds[0]);
+  setHome(5, q['I']?.first ?? null);    setAway(5, assignedThirds[1]);
+  setHome(6, q['G']?.first ?? null);    setAway(6, assignedThirds[2]);
+  setHome(7, q['D']?.first ?? null);    setAway(7, assignedThirds[3]);
+  setHome(8, q['H']?.first ?? null);    setAway(8, q['J']?.second ?? null);
+  setHome(9, q['K']?.second ?? null);   setAway(9, q['L']?.second ?? null);
+  setHome(10, q['E']?.second ?? null);  setAway(10, q['I']?.second ?? null);
+  setHome(11, q['A']?.first ?? null);   setAway(11, assignedThirds[4]);
+  setHome(12, q['L']?.first ?? null);   setAway(12, assignedThirds[5]);
   setHome(13, q['B']?.first ?? null);   setAway(13, assignedThirds[6]);
-  setHome(14, q['D']?.second ?? null);  setAway(14, q['G']?.second ?? null);
-  setHome(15, q['J']?.first ?? null);   setAway(15, q['H']?.second ?? null);
-  setHome(16, q['K']?.first ?? null);   setAway(16, assignedThirds[7]);
+  setHome(14, q['K']?.first ?? null);   setAway(14, assignedThirds[7]);
+  setHome(15, q['D']?.second ?? null);  setAway(15, q['G']?.second ?? null);
+  setHome(16, q['J']?.first ?? null);   setAway(16, q['H']?.second ?? null);
 
   return updated;
 }

@@ -186,34 +186,34 @@ export function createKnockoutBracket(): Record<number, KnockoutMatch> {
     { matchNumber: 1, homeLabel: '2º Grupo A', awayLabel: '2º Grupo B' },
     // Match 2: 1C vs 2F
     { matchNumber: 2, homeLabel: '1º Grupo C', awayLabel: '2º Grupo F' },
-    // Match 3: 1E vs 3º ABCDF
-    { matchNumber: 3, homeLabel: '1º Grupo E', awayLabel: '3º Melhor (A/B/C/D/F)' },
-    // Match 4: 1F vs 2C
-    { matchNumber: 4, homeLabel: '1º Grupo F', awayLabel: '2º Grupo C' },
-    // Match 5: 2E vs 2I
-    { matchNumber: 5, homeLabel: '2º Grupo E', awayLabel: '2º Grupo I' },
-    // Match 6: 1I vs 3º CDFGH
-    { matchNumber: 6, homeLabel: '1º Grupo I', awayLabel: '3º Melhor (C/D/F/G/H)' },
-    // Match 7: 1A vs 3º CEFHI
-    { matchNumber: 7, homeLabel: '1º Grupo A', awayLabel: '3º Melhor (C/E/F/H/I)' },
-    // Match 8: 1L vs 3º EHIJK
-    { matchNumber: 8, homeLabel: '1º Grupo L', awayLabel: '3º Melhor (E/H/I/J/K)' },
-    // Match 9: 1G vs 3º AEHIJ
-    { matchNumber: 9, homeLabel: '1º Grupo G', awayLabel: '3º Melhor (A/E/H/I/J)' },
-    // Match 10: 1D vs 3º BEFIJ
-    { matchNumber: 10, homeLabel: '1º Grupo D', awayLabel: '3º Melhor (B/E/F/I/J)' },
-    // Match 11: 1H vs 2J
-    { matchNumber: 11, homeLabel: '1º Grupo H', awayLabel: '2º Grupo J' },
-    // Match 12: 2K vs 2L
-    { matchNumber: 12, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
+    // Match 3: 1F vs 2C
+    { matchNumber: 3, homeLabel: '1º Grupo F', awayLabel: '2º Grupo C' },
+    // Match 4: 1E vs 3º ABCDF
+    { matchNumber: 4, homeLabel: '1º Grupo E', awayLabel: '3º Melhor (A/B/C/D/F)' },
+    // Match 5: 1I vs 3º CDFGH
+    { matchNumber: 5, homeLabel: '1º Grupo I', awayLabel: '3º Melhor (C/D/F/G/H)' },
+    // Match 6: 1G vs 3º AEHIJ
+    { matchNumber: 6, homeLabel: '1º Grupo G', awayLabel: '3º Melhor (A/E/H/I/J)' },
+    // Match 7: 1D vs 3º BEFIJ
+    { matchNumber: 7, homeLabel: '1º Grupo D', awayLabel: '3º Melhor (B/E/F/I/J)' },
+    // Match 8: 1H vs 2J
+    { matchNumber: 8, homeLabel: '1º Grupo H', awayLabel: '2º Grupo J' },
+    // Match 9: 2K vs 2L
+    { matchNumber: 9, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
+    // Match 10: 2E vs 2I
+    { matchNumber: 10, homeLabel: '2º Grupo E', awayLabel: '2º Grupo I' },
+    // Match 11: 1A vs 3º CEFHI
+    { matchNumber: 11, homeLabel: '1º Grupo A', awayLabel: '3º Melhor (C/E/F/H/I)' },
+    // Match 12: 1L vs 3º EHIJK
+    { matchNumber: 12, homeLabel: '1º Grupo L', awayLabel: '3º Melhor (E/H/I/J/K)' },
     // Match 13: 1B vs 3º EFGIJ
     { matchNumber: 13, homeLabel: '1º Grupo B', awayLabel: '3º Melhor (E/F/G/I/J)' },
-    // Match 14: 2D vs 2G
-    { matchNumber: 14, homeLabel: '2º Grupo D', awayLabel: '2º Grupo G' },
-    // Match 15: 1J vs 2H
-    { matchNumber: 15, homeLabel: '1º Grupo J', awayLabel: '2º Grupo H' },
-    // Match 16: 1K vs 3º DEIJL
-    { matchNumber: 16, homeLabel: '1º Grupo K', awayLabel: '3º Melhor (D/E/I/J/L)' },
+    // Match 14: 1K vs 3º DEIJL
+    { matchNumber: 14, homeLabel: '1º Grupo K', awayLabel: '3º Melhor (D/E/I/J/L)' },
+    // Match 15: 2D vs 2G
+    { matchNumber: 15, homeLabel: '2º Grupo D', awayLabel: '2º Grupo G' },
+    // Match 16: 1J vs 2H
+    { matchNumber: 16, homeLabel: '1º Grupo J', awayLabel: '2º Grupo H' },
   ];
 
   // R16 matches (winners of R32 matches)
