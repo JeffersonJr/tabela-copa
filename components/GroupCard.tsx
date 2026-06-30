@@ -145,11 +145,7 @@ export default function GroupCard({ groupId, groupState }: GroupCardProps) {
                       {/* Score detail */}
                       {isPlayed && (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginTop: 4 }}>
-                          <div style={{ display: 'flex', justifyContent: 'center', gap: 8, fontSize: '0.6875rem', color: 'var(--text-muted)' }}>
-                            <span>{match.score.home.first ?? 0}–{match.score.away.first ?? 0} (1T)</span>
-                            <span>·</span>
-                            <span>{match.score.home.second ?? 0}–{match.score.away.second ?? 0} (2T)</span>
-                          </div>
+                          {/* No breakdown needed */}
                           <span style={{ 
                             fontSize: '0.6rem', 
                             padding: '2px 6px', 

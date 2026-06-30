@@ -8,10 +8,12 @@ import { GROUP_MATCHES_SCHEDULE } from './schedule';
 
 export function getFinalScore(score: MatchScore): { home: number; away: number } {
   const homeFirst = score.home.first ?? 0;
+  const homeSecond = score.home.second ?? 0;
   const awayFirst = score.away.first ?? 0;
+  const awaySecond = score.away.second ?? 0;
 
-  let home = homeFirst;
-  let away = awayFirst;
+  let home = homeFirst + homeSecond;
+  let away = awayFirst + awaySecond;
 
   if (score.hasExtraTime && score.extraTime) {
     home += score.extraTime.home;
@@ -40,8 +42,8 @@ export function getWinner(match: Match): string | null {
 
 export function isMatchComplete(match: Match): boolean {
   const s = match.score;
-  if (s.home.first === null) return false;
-  if (s.away.first === null) return false;
+  if (s.home.first === null || s.home.second === null) return false;
+  if (s.away.first === null || s.away.second === null) return false;
   if (s.hasExtraTime && !s.extraTime) return false;
   if (s.hasPenalties && !s.penalties) return false;
   return true;
@@ -132,7 +134,7 @@ export function generateGroupMatches(groupId: string, teamIds: string[]): Match[
         homeTeamId: teamIds[a],
         awayTeamId: teamIds[b],
         played: false,
-        score: { home: { first: null }, away: { first: null }, hasExtraTime: false, hasPenalties: false },
+        score: { home: { first: null, second: null }, away: { first: null, second: null }, hasExtraTime: false, hasPenalties: false },
       });
     }
     return matches;
@@ -150,7 +152,7 @@ export function generateGroupMatches(groupId: string, teamIds: string[]): Match[
       time: sm.time,
       location: sm.location,
       played: false,
-      score: { home: { first: null }, away: { first: null }, hasExtraTime: false, hasPenalties: false },
+      score: { home: { first: null, second: null }, away: { first: null, second: null }, hasExtraTime: false, hasPenalties: false },
     });
   }
   return matches;
@@ -213,7 +215,7 @@ export function createKnockoutBracket(): Record<number, KnockoutMatch> {
     { matchNumber: 2, homeLabel: '1º Grupo I', awayLabel: '3º Melhor (C/D/F/G/H)' },
     { matchNumber: 3, homeLabel: '2º Grupo A', awayLabel: '2º Grupo B' },
     { matchNumber: 4, homeLabel: '1º Grupo F', awayLabel: '2º Grupo C' },
-    { matchNumber: 5, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
+    { matchNumber: 5, homeLabel: '1º Grupo K', awayLabel: '3º Melhor (D/E/I/J/L)' },
     { matchNumber: 6, homeLabel: '1º Grupo H', awayLabel: '2º Grupo J' },
     { matchNumber: 7, homeLabel: '1º Grupo D', awayLabel: '3º Melhor (B/E/F/I/J)' },
     { matchNumber: 8, homeLabel: '1º Grupo G', awayLabel: '3º Melhor (A/E/H/I/J)' },
@@ -226,7 +228,7 @@ export function createKnockoutBracket(): Record<number, KnockoutMatch> {
     { matchNumber: 13, homeLabel: '1º Grupo J', awayLabel: '2º Grupo H' },
     { matchNumber: 14, homeLabel: '2º Grupo D', awayLabel: '2º Grupo G' },
     { matchNumber: 15, homeLabel: '1º Grupo B', awayLabel: '3º Melhor (E/F/G/I/J)' },
-    { matchNumber: 16, homeLabel: '1º Grupo K', awayLabel: '3º Melhor (D/E/I/J/L)' },
+    { matchNumber: 16, homeLabel: '2º Grupo K', awayLabel: '2º Grupo L' },
   ];
 
   // R16 matches (winners of R32 matches)
